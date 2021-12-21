@@ -1,10 +1,10 @@
 ## 在原版基本上做了以下更新
 
-> 升级bootstrap到5.1.3
-> 去掉 font-awesome 图标依赖
-> 去掉本身的 nth-icons 图标依赖
-> 针对 bootstrap5 部分样式做了调整
-> 优化 tab 标签样式，现在不再是固定长度，文字再多也不会溢出换行
+- 升级bootstrap到5.1.3
+- 去掉 font-awesome 图标依赖
+- 去掉本身的 nth-icons 图标依赖
+- 针对 bootstrap5 部分样式做了调整
+- 优化 tab 标签样式，现在不再是固定长度，文字再多也不会溢出换行
 
 感谢原作者！！！
 
