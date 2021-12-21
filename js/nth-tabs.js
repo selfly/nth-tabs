@@ -26,23 +26,28 @@
 
         var template =
             '<div class="page-tabs">' +
-            '<a href="#" class="roll-nav roll-nav-left"><span class="fa fa-angle-double-left"></span></a>' +
+            '<a href="#" class="nav-link roll-nav roll-nav-left">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/><path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>' +
+            '</a>' +
             '<div class="content-tabs">' +
             '<div class="content-tabs-container">' +
             '<ul class="nav nav-tabs"></ul>' +
             '</div>' +
             '</div>' +
-            '<a href="#" class="roll-nav roll-nav-right"><span class="fa fa-angle-double-right"></span></a>' +
+            '<a href="#" class="nav-link roll-nav roll-nav-right">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/><path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/></svg>' +
+            '</a>' +
             '<div class="dropdown roll-nav right-nav-list">' +
-            '<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
-            '<span class="tab-down"></span></a>' +
+            '<a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown">' +
+            // '<span class="tab-down"></span>' +
+            '</a>' +
             '<ul class="dropdown-menu">' +
-            '<li><a href="#" class="tab-location">定位当前选项卡</a></li>' +
-            '<li><a href="#" class="tab-close-current">关闭当前选项卡</a></li>' +
+            '<li><a href="#" class="dropdown-item tab-location">定位当前选项卡</a></li>' +
+            '<li><a href="#" class="dropdown-item tab-close-current">关闭当前选项卡</a></li>' +
             '<li role="separator" class="divider"></li>' +
-            '<li><a href="#" class="tab-close-other">关闭其他选项卡</a></li>' +
-            '<li><a href="#" class="tab-close-all">关闭全部选项卡</a></li>' +
-            '<li class="divider"></li>' +
+            '<li><a href="#" class="dropdown-item tab-close-other">关闭其他选项卡</a></li>' +
+            '<li><a href="#" class="dropdown-item tab-close-all">关闭全部选项卡</a></li>' +
+            '<li class="dropdown-divider"></li>' +
             '<li class="scrollbar-outer tab-list-scrollbar">' +
             '<div class="tab-list-container"><ul class="tab-list"></ul></div>' +
             '</li>' +
@@ -52,7 +57,7 @@
             '<div class="tab-content"></div>';
 
         // 启用插件
-        var run = function(){
+        var run = function () {
             nthTabs.html(template);
             event.onWindowsResize().onTabClose().onTabRollLeft().onTabRollRight().onTabList()
                 .onTabCloseOpt().onTabCloseAll().onTabCloseOther().onLocationTab().onTabToggle();
@@ -78,7 +83,8 @@
 
             // 获取当前活动状态选项卡ID
             getActiveId: function () {
-                return nthTabs.find('li[class="active"]').find("a").attr("href").replace('#', '');
+                var activeTab = nthTabs.find('a.active');
+                return activeTab.length == 0 ? undefined : activeTab.attr("href").replace('#', '');
             },
 
             // 获取所有选项卡
@@ -92,7 +98,10 @@
 
             // 新建单个选项卡
             addTab: function (options) {
-                if(this.isExistsTab(options.id)){this.setActTab(options.id);return;}
+                if (this.isExistsTab(options.id)) {
+                    this.setActTab(options.id);
+                    return;
+                }
                 // nav-tab
                 var tab = [];
                 var active = options.active == undefined ? settings.active : options.active;
@@ -100,21 +109,23 @@
                 var location = options.location == undefined ? settings.location : options.location;
                 var fadeIn = options.fadeIn == undefined ? settings.fadeIn : options.fadeIn;
                 var url = options.url == undefined ? "" : options.url;
-                tab.push('<li title="' + options.title + '" '+(allowClose ? '' : 'not-allow-close')+'>');
-                tab.push('<a href="#' + options.id + '" data-toggle="tab">');
+                tab.push('<li title="' + options.title + '" ' + (allowClose ? '' : 'not-allow-close') + '>');
+                tab.push('<a class="nav-link" href="#' + options.id + '" data-bs-toggle="tab">');
                 tab.push('<span>' + options.title + '</span>');
                 tab.push('</a>');
-                allowClose ? tab.push('<i class="icon nth-icon-close-mini tab-close"></i>') : '';
+                allowClose ? tab.push('<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x tab-close" viewBox="0 0 16 16">' +
+                    '<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>' +
+                    '</svg>') : '';
                 tab.push('</li>');
                 nthTabs.find(".nav-tabs").append(tab.join(''));
                 //tab-content
                 var tabContent = [];
-                tabContent.push('<div class="tab-pane '+(fadeIn ? 'animation-fade' : '')+'" id="' + options.id  +'" '+(allowClose ? '' : 'not-allow-close')+'>');
-                if(url.length>0){
-                    tabContent.push('<iframe src="'+options.url+'" frameborder="0" name="iframe-'+frameName+'" class="nth-tabs-frame"></iframe>');
+                tabContent.push('<div class="tab-pane ' + (fadeIn ? 'animation-fade' : '') + '" id="' + options.id + '" ' + (allowClose ? '' : 'not-allow-close') + '>');
+                if (url.length > 0) {
+                    tabContent.push('<iframe src="' + options.url + '" frameborder="0" name="iframe-' + frameName + '" class="nth-tabs-frame"></iframe>');
                     frameName++;
-                }else{
-                    tabContent.push('<div class="nth-tabs-content">'+options.content+"</div>");
+                } else {
+                    tabContent.push('<div class="nth-tabs-content">' + options.content + "</div>");
                 }
                 tabContent.push('</div>');
                 nthTabs.find(".tab-content").append(tabContent.join(''));
@@ -125,7 +136,7 @@
 
             //新建多个选项卡
             addTabs: function (tabsOptions) {
-                for(var index in tabsOptions){
+                for (var index in tabsOptions) {
                     this.addTab(tabsOptions[index]);
                 }
                 return this;
@@ -148,7 +159,7 @@
                     margin_left_total = 40;
                 }
                 // 情况2：前面同级选项卡宽度之和大于选项卡可视区域的，则margin为向左偏移整数倍的距离
-                else{
+                else {
                     margin_left_total = 40 - Math.floor(beforeTabsWidth / settings.rollWidth) * settings.rollWidth;
                 }
                 contentTab.css("margin-left", margin_left_total);
@@ -158,9 +169,12 @@
             // 删除单个选项卡
             delTab: function (tabId) {
                 tabId = tabId == undefined ? methods.getActiveId() : tabId;
+                if (tabId == undefined || tabId == "") {
+                    return;
+                }
                 tabId = tabId.indexOf('#') > -1 ? tabId : '#' + tabId;
                 var navTabA = nthTabs.find("[href='" + tabId + "']");
-                if(navTabA.parent().attr('not-allow-close')!=undefined) return false;
+                if (navTabA.parent().attr('not-allow-close') != undefined) return false;
                 // 如果关闭的是激活状态的选项卡
                 if (navTabA.parent().attr('class') == 'active') {
                     // 激活选项卡，如果后面存在激活后面，否则激活前面
@@ -199,7 +213,7 @@
                 tabId = tabId == undefined ? methods.getActiveId() : tabId;
                 tabId = tabId.indexOf('#') > -1 ? tabId : '#' + tabId;
                 nthTabs.find('.active').removeClass('active');
-                nthTabs.find("[href='" + tabId + "']").parent().addClass('active');
+                nthTabs.find("[href='" + tabId + "']").addClass('active');
                 nthTabs.find(tabId).addClass('active');
                 return this;
             },
@@ -213,11 +227,11 @@
             // 指定选项卡是否存在
             isExistsTab: function (tabId) {
                 tabId = tabId.indexOf('#') > -1 ? tabId : '#' + tabId;
-                return nthTabs.find(tabId).length>0;
+                return nthTabs.find(tabId).length > 0;
             },
 
             // 选项卡切换事件处理器
-            tabToggleHandler: function(func){
+            tabToggleHandler: function (func) {
                 handler["tabToggleHandler"] = func;
             }
         };
@@ -232,7 +246,7 @@
                 });
                 return this;
             },
-            
+
             // 定位选项卡
             onLocationTab: function () {
                 nthTabs.on("click", '.tab-location', function () {
@@ -248,7 +262,7 @@
                     //当前操作的标签宽度
                     var navTabOpt = nthTabs.find("[href='" + tabId + "']"); // 当前操作选项卡对象
                     // 当前选项卡后有选项卡则不处理，如果无，则整体向左偏移一个选项卡
-                    if(navTabOpt.parent().next().length == 0){
+                    if (navTabOpt.parent().next().length == 0) {
                         // 计算存在于当前操作选项卡之前的所有同级选项卡的宽度之和
                         var beforeTabsWidth = 0;
                         navTabOpt.parent().prevAll().each(function () {
@@ -303,7 +317,7 @@
                     if (methods.getAllTabWidth() <= settings.rollWidth) {
                         //未超出可视区域宽度,不可滑动
                         margin_left_total = 40;
-                    }else{
+                    } else {
                         var margin_left_origin = contentTab.css('marginLeft').replace('px', '');
                         margin_left_total = parseFloat(margin_left_origin) + methods.getMarginStep() + 40;
                     }
@@ -347,24 +361,24 @@
                     methods.setActTab(tabId).locationTab(tabId);
                 });
                 // 选项卡清单滚动条点击不关闭
-                nthTabs.on('click','.scroll-element',function (e) {
+                nthTabs.on('click', '.scroll-element', function (e) {
                     e.stopPropagation();
                 });
                 return this;
             },
 
             // 选项卡切换事件
-            onTabToggle: function(){
+            onTabToggle: function () {
                 nthTabs.on("click", '.nav-tabs li', function () {
-                    var lastTabText = nthTabs.find(".nav-tabs li a[href='#"+methods.getActiveId()+"'] span").text();
+                    var lastTabText = nthTabs.find(".nav-tabs li a[href='#" + methods.getActiveId() + "'] span").text();
                     handler.hasOwnProperty("tabToggleHandler") && handler["tabToggleHandler"]({
-                        last:{
-                            tabId:methods.getActiveId(),
-                            tabText:lastTabText
+                        last: {
+                            tabId: methods.getActiveId(),
+                            tabText: lastTabText
                         },
-                        active:{
-                            tabId:$(this).find("a").attr("href").replace('#',''),
-                            tabText:$(this).find("a span").text()
+                        active: {
+                            tabId: $(this).find("a").attr("href").replace('#', ''),
+                            tabText: $(this).find("a span").text()
                         }
                     });
                 });
