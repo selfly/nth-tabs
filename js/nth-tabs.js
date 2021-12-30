@@ -176,7 +176,7 @@
                 var navTabA = nthTabs.find("[href='" + tabId + "']");
                 if (navTabA.parent().attr('not-allow-close') != undefined) return false;
                 // 如果关闭的是激活状态的选项卡
-                if (navTabA.parent().attr('class') == 'active') {
+                if (navTabA.hasClass('active')) {
                     // 激活选项卡，如果后面存在激活后面，否则激活前面
                     var activeNavTab = navTabA.parent().next();
                     var activeTabContent = $(tabId).next();
@@ -184,7 +184,7 @@
                         activeNavTab = navTabA.parent().prev();
                         activeTabContent = $(tabId).prev();
                     }
-                    activeNavTab.addClass('active');
+                    activeNavTab.find("a").addClass('active');
                     activeTabContent.addClass('active');
                 }
                 // 移除旧选项卡
